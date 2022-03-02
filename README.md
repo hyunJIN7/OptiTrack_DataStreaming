@@ -15,8 +15,11 @@
 2. Matalb에서 `\NatNet_SDK_3.1\NatNetSDK\Samples\Matlab` 에 있는 `NatNetPollingSample.m`, `NatNetEventHandlerSample.m` 파일 open, `.dll` 종속 파일 추가
 3. Server computer, Client(노트북) 의 ip 주소 확인 - ipconfig 명령어 통해
 4.  `NatNetPollingSample.m` 에서 ip 주소 변경 후 실행. 
+
       초당 x,y,z 데이터가 한줄에 저장됨. 
+      
       스트리밍 시간 time 변수 값으로 조절
+      
 position 이외에 rotation 값 저장 필요시 `NatNetEventHandlerSample.m` 파일 참고해 코드 수정
 
 
