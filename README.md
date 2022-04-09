@@ -7,7 +7,7 @@
 
 :heavy_check_mark: [NatNet sample 파일 설명](https://v30.wiki.optitrack.com/index.php?title=NatNet:_Sample_Projects#Running_the_Console_Output_Sample_.28Sample_Client.29)
 
-:heavy_check_mark: [Optitrack 질문](https://forums.naturalpoint.com/viewforum.php?f=78)
+:heavy_check_mark: [Optitrack 질문 사이트](https://forums.naturalpoint.com/viewforum.php?f=78)
 
 
 ## Optitrack Data Streaming 방법(Matlab 기준)
