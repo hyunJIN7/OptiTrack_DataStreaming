@@ -62,9 +62,9 @@ function NatNetPollingSample
 % 움직일게 아니라면 
 % N개의 이미지 출력하려면 N/설정한 hz
 % 근데 그냥 이번 실험에서는 time = 996으로 세팅해놓고 count 150으로 해놓고 keyframe selection 30개 마다 하는게 clear 하긴하지. 2분 30초
-% 아니면 반 줄이던가
+% 아니면 반 줄이던가 
     
-    time = 
+    time = 996
     count = 10;
     for idx = 1 : count
 		java.lang.Thread.sleep(time); %996  1000ms    30hz 
@@ -83,16 +83,21 @@ function NatNetPollingSample
             x = data.RigidBody( i ).x * 1000;
             y = data.RigidBody( i ).y * 1000;
             z = data.RigidBody( i ).z * 1000;
+            qx = data.RigidBody( i ).qx * 1000;
+            qy = data.RigidBody( i ).qy * 1000;
+            qz = data.RigidBody( i ).qz * 1000;
+            qw = data.RigidBody( i ).qw * 1000;
             
 			fprintf( 'X:%0.1fmm  ', x )
 			fprintf( 'Y:%0.1fmm  ', y )
 			fprintf( 'Z:%0.1fmm\n', z )
-            m = [x y z];
+
+            m = [x y z qx qy qz qw];
             pos = horzcat(pos, m)
         end
         all_pos = vertcat(all_pos, pos);
     end
-    fname = 'postion_xyz' + '' + '.txt'
+%     fname = 'postion_xyz' + '' + '.txt'
     csvwrite('postion_xyz.txt',all_pos)
 	disp('NatNet Polling Sample End' )
 end
