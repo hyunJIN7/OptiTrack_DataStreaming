@@ -51,9 +51,23 @@ function NatNetPollingSample
 	% Poll for the rigid body data a regular intervals (~1 sec) for 10 sec.
 	fprintf( '\nPrinting rigid body frame data approximately every second for 10 seconds...\n\n' )
 	all_pos=[];
-    time = 10;
-    for idx = 1 : time
-		java.lang.Thread.sleep( 996 );
+
+%     time(ms)
+%          Nhz를 만들고 싶다면 time은 1000/N 으로 설정하면 됨.
+%         1000ms : 1hz  time1000으로 설정하면 1hz. 정확하게는 time 996으로 설정해야함
+%           33ms : 30hz  1초에 30개 찍혀야하니까 1000/30
+%     count
+%         time으로 설정한 초 간격으로 몇개를 출력할것인지
+% 150장 이미지 출력하려면 150/30=5초 인데 나는 keyframe selection 있잖아 그 파트 고민해봐야지.....빠르게
+% 움직일게 아니라면 
+% N개의 이미지 출력하려면 N/설정한 hz
+% 근데 그냥 이번 실험에서는 time = 996으로 세팅해놓고 count 150으로 해놓고 keyframe selection 30개 마다 하는게 clear 하긴하지. 2분 30초
+% 아니면 반 줄이던가
+    
+    time = 
+    count = 10;
+    for idx = 1 : count
+		java.lang.Thread.sleep(time); %996  1000ms    30hz 
 		data = natnetclient.getFrame; % method to get current frame
 		
 		if (isempty(data.RigidBody(1)))
@@ -69,6 +83,7 @@ function NatNetPollingSample
             x = data.RigidBody( i ).x * 1000;
             y = data.RigidBody( i ).y * 1000;
             z = data.RigidBody( i ).z * 1000;
+            
 			fprintf( 'X:%0.1fmm  ', x )
 			fprintf( 'Y:%0.1fmm  ', y )
 			fprintf( 'Z:%0.1fmm\n', z )
@@ -77,14 +92,7 @@ function NatNetPollingSample
         end
         all_pos = vertcat(all_pos, pos);
     end
+    fname = 'postion_xyz' + '' + '.txt'
     csvwrite('postion_xyz.txt',all_pos)
 	disp('NatNet Polling Sample End' )
 end
-
-
-
-
-
-
-
- 
