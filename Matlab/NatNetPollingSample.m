@@ -11,7 +11,6 @@
 %WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 %See the License for the specific language governing permissions and
 %limitations under the License.
-
 % Optitrack Matlab / NatNet Polling Sample
 %  Requirements:
 %   - OptiTrack Motive 2.0 or later
@@ -19,19 +18,16 @@
 %   - Matlab R2013
 % This sample connects to the server and displays rigid body data.
 % natnet.p, needs to be located on the Matlab Path.
-
 function NatNetPollingSample
 	fprintf( 'NatNet Polling Sample Start\n' )
-
 	% create an instance of the natnet client class
 	fprintf( 'Creating natnet class object\n' )
 	natnetclient = natnet;
-
 	% connect the client to the server (multicast over local loopback) -
 	% modify for your network
 	fprintf( 'Connecting to the server\n' )
 	natnetclient.HostIP = '192.168.0.80';
-	natnetclient.ClientIP = '192.168.0.207';
+	natnetclient.ClientIP = '192.168.0.80';
 	natnetclient.ConnectionType = 'Multicast';
 	natnetclient.connect;
 	if ( natnetclient.IsConnected == 0 )
@@ -40,18 +36,15 @@ function NatNetPollingSample
 		fprintf( '\tand that the host and client IP addresses are correct\n\n' ) 
 		return
 	end
-
 	% get the asset descriptions for the asset names
 	model = natnetclient.getModelDescription;
  
 	if ( model.RigidBodyCount < 1 )
 		return
 	end
-
 	% Poll for the rigid body data a regular intervals (~1 sec) for 10 sec.
 	fprintf( '\nPrinting rigid body frame data approximately every second for 10 seconds...\n\n' )
 	all_pos=[];
-
 %     time(ms)
 %          Nhz를 만들고 싶다면 time은 1000/N 으로 설정하면 됨.
 %         1000ms : 1hz  time1000으로 설정하면 1hz. 정확하게는 time 996으로 설정해야함
@@ -91,13 +84,38 @@ function NatNetPollingSample
 			fprintf( 'X:%0.1fmm  ', x )
 			fprintf( 'Y:%0.1fmm  ', y )
 			fprintf( 'Z:%0.1fmm\n', z )
-
-            m = [x y z qx qy qz qw];
+            r=[];
+            t = datetime("now","TimeZone","Asia/Seoul");
+            t = posixtime(t)
+            quat = [qw qx qy qz];
+            rotm = q2r(quat);
+            rotx = rotm(1,:);
+            roty = rotm(2,:);
+            rotz = rotm(3,:);
+            r = [rotx x roty y rotz z];
+            r = cast(r,"double");
+            
+            
+            m = [t r];
             pos = horzcat(pos, m)
+            f = fopen("position_z.txt","a");
+            textfile = fprintf(f, "%.3f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
+            fclose(f);
         end
         all_pos = vertcat(all_pos, pos);
     end
-%     fname = 'postion_xyz' + '' + '.txt'
-    csvwrite('postion_xyz.txt',all_pos)
+%   fname = 'postion_xyz' + '' + '.txt'
+    %csvwrite('postion_xyz.txt',all_pos)
+    %writematrix(all_pos, "position_xyz_test2","delimiter"," ")
 	disp('NatNet Polling Sample End' )
+end
+function R = q2r( q )
+q = q/norm(q);
+a = q(1);
+b = q(2);
+c = q(3);
+d = q(4);
+R=[ a*a+b*b-c*c-d*d,     2*(b*c-a*d),     2*(b*d+a*c);
+    2*(b*c+a*d), a*a-b*b+c*c-d*d,     2*(c*d-a*b);
+    2*(b*d-a*c),     2*(c*d+a*b), a*a-b*b-c*c+d*d; ];
 end
