@@ -73,13 +73,23 @@ function NatNetPollingSample
         pos = [];
 		for i = 1:model.RigidBodyCount
 			fprintf( 'Name:"%s"  ', model.RigidBody( i ).Name )
-            x = data.RigidBody( i ).x * 1000;
-            y = data.RigidBody( i ).y * 1000;
-            z = data.RigidBody( i ).z * 1000;
-            qx = data.RigidBody( i ).qx * 1000;
-            qy = data.RigidBody( i ).qy * 1000;
-            qz = data.RigidBody( i ).qz * 1000;
-            qw = data.RigidBody( i ).qw * 1000;
+%             mm 단위
+%             x = data.RigidBody( i ).x * 1000;
+%             y = data.RigidBody( i ).y * 1000;
+%             z = data.RigidBody( i ).z * 1000;
+%             qx = data.RigidBody( i ).qx * 1000;
+%             qy = data.RigidBody( i ).qy * 1000;
+%             qz = data.RigidBody( i ).qz * 1000;
+%             qw = data.RigidBody( i ).qw * 1000;
+
+%             m단위
+            x = data.RigidBody( i ).x;
+            y = data.RigidBody( i ).y;
+            z = data.RigidBody( i ).z;
+            qx = data.RigidBody( i ).qx;
+            qy = data.RigidBody( i ).qy;
+            qz = data.RigidBody( i ).qz;
+            qw = data.RigidBody( i ).qw];
             
 			fprintf( 'X:%0.1fmm  ', x )
 			fprintf( 'Y:%0.1fmm  ', y )
