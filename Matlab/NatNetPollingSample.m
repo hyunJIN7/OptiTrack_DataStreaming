@@ -99,6 +99,7 @@ function NatNetPollingSample
             t = posixtime(t)
             quat = [qw qx qy qz];
             rotm = q2r(quat);
+            rotm = AxisFlip([-1,1,-1],rotm); %x,z aixs flip
             rotx = rotm(1,:);
             roty = rotm(2,:);
             rotz = rotm(3,:);
