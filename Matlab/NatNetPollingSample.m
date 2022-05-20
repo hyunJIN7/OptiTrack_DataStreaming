@@ -57,8 +57,9 @@ function NatNetPollingSample
 % 근데 그냥 이번 실험에서는 time = 996으로 세팅해놓고 count 150으로 해놓고 keyframe selection 30개 마다 하는게 clear 하긴하지. 2분 30초
 % 아니면 반 줄이던가 
     
-    time = 996
-    count = 10;
+    Hz = 1;
+    time = 996; % 30hz로도 뽑아보자 그럼...
+    count = 300;
     for idx = 1 : count
 		java.lang.Thread.sleep(time); %996  1000ms    30hz 
 		data = natnetclient.getFrame; % method to get current frame
@@ -109,13 +110,13 @@ function NatNetPollingSample
             
             m = [t r];
             pos = horzcat(pos, m)
-            f = fopen("position_z.txt","a");
-            textfile = fprintf(f, "%.3f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
+            fname = append("opti_pose_", "truck_" , int2str(time) , ".txt");
+            f = fopen(fname,"a");
+            textfile = fprintf(f, "%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
             fclose(f);
         end
         all_pos = vertcat(all_pos, pos);
     end
-%   fname = 'postion_xyz' + '' + '.txt'
     %csvwrite('postion_xyz.txt',all_pos)
     %writematrix(all_pos, "position_xyz_test2","delimiter"," ")
 	disp('NatNet Polling Sample End' )
