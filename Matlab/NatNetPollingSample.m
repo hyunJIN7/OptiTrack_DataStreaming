@@ -27,7 +27,7 @@ function NatNetPollingSample
 	% modify for your network
 	fprintf( 'Connecting to the server\n' )
 	natnetclient.HostIP = '192.168.0.80';
-	natnetclient.ClientIP = '192.168.0.80';
+	natnetclient.ClientIP = '192.168.0.207'; 
 	natnetclient.ConnectionType = 'Multicast';
 	natnetclient.connect;
 	if ( natnetclient.IsConnected == 0 )
@@ -59,7 +59,7 @@ function NatNetPollingSample
     
     Hz = 1;
     time = 996; % 30hz로도 뽑아보자 그럼...
-    count = 300;
+    count = 250;
     for idx = 1 : count
 		java.lang.Thread.sleep(time); %996  1000ms    30hz 
 		data = natnetclient.getFrame; % method to get current frame
@@ -90,7 +90,7 @@ function NatNetPollingSample
             qx = data.RigidBody( i ).qx;
             qy = data.RigidBody( i ).qy;
             qz = data.RigidBody( i ).qz;
-            qw = data.RigidBody( i ).qw];
+            qw = data.RigidBody( i ).qw;
             
 			fprintf( 'X:%0.1fmm  ', x )
 			fprintf( 'Y:%0.1fmm  ', y )
@@ -98,21 +98,24 @@ function NatNetPollingSample
             r=[];
             t = datetime("now","TimeZone","Asia/Seoul");
             t = posixtime(t)
+            
             quat = [qw qx qy qz];
-            rotm = q2r(quat);
-            rotm = AxisFlip([-1,1,-1],rotm); %x,z aixs flip
-            rotx = rotm(1,:);
-            roty = rotm(2,:);
-            rotz = rotm(3,:);
-            r = [rotx x roty y rotz z];
+            rotm = q2r(quat); %(3,3)
+            trans = [x;y;z];
+            rt = [rotm , trans]; % (3,4)
+            new_rt = AxisFlip([-1,1,-1],rt); %x,z aixs flip
+            rt1 = new_rt(1,:);
+            rt2 = new_rt(2,:);
+            rt3 = new_rt(3,:);
+            r = [rt1 rt2 rt3];
             r = cast(r,"double");
             
             
             m = [t r];
             pos = horzcat(pos, m)
-            fname = append("opti_pose_", "truck_" , int2str(time) , ".txt");
+            fname = append("opti_pose_", "truck" , int2str(time) , ".txt");
             f = fopen(fname,"a");
-            textfile = fprintf(f, "%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
+            textfile = fprintf(f, "%.3f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
             fclose(f);
         end
         all_pos = vertcat(all_pos, pos);
