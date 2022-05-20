@@ -59,7 +59,7 @@ function NatNetPollingSample
     
     Hz = 1;
     time = 996; % 30hz로도 뽑아보자 그럼...
-    count = 250;
+    count = 20;
     for idx = 1 : count
 		java.lang.Thread.sleep(time); %996  1000ms    30hz 
 		data = natnetclient.getFrame; % method to get current frame
@@ -113,9 +113,9 @@ function NatNetPollingSample
             
             m = [t r];
             pos = horzcat(pos, m)
-            fname = append("opti_pose_", "truck" , int2str(time) , ".txt");
+            fname = append("opti_pose_", "rect_" , int2str(time) , ".txt");
             f = fopen(fname,"a");
-            textfile = fprintf(f, "%.3f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
+            textfile = fprintf(f, "%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
             fclose(f);
         end
         all_pos = vertcat(all_pos, pos);
