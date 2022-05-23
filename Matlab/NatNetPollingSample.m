@@ -58,7 +58,7 @@ function NatNetPollingSample
 % 아니면 반 줄이던가 
     
     time = 96; 
-    count = 2500; % 996 (1Hz) , 250  --> 96(10Hz), 2500
+    count = 2500; % 996 (1Hz) , 250 --> 96(10Hz), 2500
     for idx = 1 : count
 		java.lang.Thread.sleep(time); %996  1000ms    30hz 
 		data = natnetclient.getFrame; % method to get current frame
@@ -99,18 +99,22 @@ function NatNetPollingSample
             t = posixtime(t)
             
             quat = [qw qx qy qz];
-            rotm = q2r(quat);
-            rotx = rotm(1,:);
-            roty = rotm(2,:);
-            rotz = rotm(3,:);
-            r = [rotx x roty y rotz z];
+            rotm = q2r(quat); %(3,3)
+            trans = [x;y;z];
+            rt = [rotm , trans]; % (3,4)
+            new_rt = AxisFlip([-1,1,-1],rt); %x,z aixs flip
+            rt1 = new_rt(1,:);
+            rt2 = new_rt(2,:);
+            rt3 = new_rt(3,:);
+            r = [rt1 rt2 rt3];
             r = cast(r,"double");
-            
-            
+
+
             m = [t r];
             pos = horzcat(pos, m)
-            f = fopen("position_z.txt","a");
-            textfile = fprintf(f, "%.3f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
+            fname = append("opti_pose_", "rect_" , int2str(time) , ".txt");
+            f = fopen(fname,"a");
+            textfile = fprintf(f, "%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
             fclose(f);
         end
         all_pos = vertcat(all_pos, pos);
