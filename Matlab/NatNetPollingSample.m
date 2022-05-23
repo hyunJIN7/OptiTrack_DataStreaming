@@ -58,7 +58,7 @@ function NatNetPollingSample
 % 아니면 반 줄이던가 
     
     time = 96; 
-    count = 2500; % 996 (1Hz) , 250 --> 96(10Hz), 2500
+    count = 300; % 996 (1Hz) , 250 --> 96(10Hz), 2500
     for idx = 1 : count
 		java.lang.Thread.sleep(time); %996  1000ms    30hz 
 		data = natnetclient.getFrame; % method to get current frame
@@ -77,19 +77,16 @@ function NatNetPollingSample
 %             x = data.RigidBody( i ).x * 1000;
 %             y = data.RigidBody( i ).y * 1000;
 %             z = data.RigidBody( i ).z * 1000;
-%             qx = data.RigidBody( i ).qx * 1000;
-%             qy = data.RigidBody( i ).qy * 1000;
-%             qz = data.RigidBody( i ).qz * 1000;
-%             qw = data.RigidBody( i ).qw * 1000;
+            qx = data.RigidBody( i ).qx * 1000;
+            qy = data.RigidBody( i ).qy * 1000;
+            qz = data.RigidBody( i ).qz * 1000;
+            qw = data.RigidBody( i ).qw * 1000;
 
 %             m단위
             x = data.RigidBody( i ).x;
             y = data.RigidBody( i ).y;
             z = data.RigidBody( i ).z;
-            qx = data.RigidBody( i ).qx;
-            qy = data.RigidBody( i ).qy;
-            qz = data.RigidBody( i ).qz;
-            qw = data.RigidBody( i ).qw;
+
             
 			fprintf( 'X:%0.1fmm  ', x )
 			fprintf( 'Y:%0.1fmm  ', y )
@@ -112,7 +109,7 @@ function NatNetPollingSample
 
             m = [t r];
             pos = horzcat(pos, m)
-            fname = append("opti_pose_", "rect_" , int2str(time) , ".txt");
+            fname = append("opti_pose_", "xyz_" , int2str(time) , ".txt");
             f = fopen(fname,"a");
             textfile = fprintf(f, "%.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f\n",pos)
             fclose(f);
