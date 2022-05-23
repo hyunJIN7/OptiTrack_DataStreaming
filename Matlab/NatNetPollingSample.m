@@ -99,10 +99,14 @@ function NatNetPollingSample
             rotm = q2r(quat); %(3,3)
             trans = [x;y;z];
             rt = [rotm , trans]; % (3,4)
-            new_rt = AxisFlip([-1,1,-1],rt); %x,z aixs flip
-            rt1 = new_rt(1,:);
-            rt2 = new_rt(2,:);
-            rt3 = new_rt(3,:);
+            rt1 = rt(1,:);
+            rt2 = rt(2,:);
+            rt3 = rt(3,:);
+%             camera frame 뒤집기, 우리가 원하는건 inertial frame 뒤집기
+%             new_rt = AxisFlip([-1,1,-1],rt); %x,z aixs flip
+%             rt1 = new_rt(1,:);
+%             rt2 = new_rt(2,:);
+%             rt3 = new_rt(3,:);
             r = [rt1 rt2 rt3];
             r = cast(r,"double");
 
